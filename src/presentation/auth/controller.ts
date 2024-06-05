@@ -32,8 +32,6 @@ export class AuthController {
       
   }
 
-
-
   loginUser = (req: Request, res: Response) => {
     
     const [error, loginUserDto] = LoginUserDto.create(req.body);

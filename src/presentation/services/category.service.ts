@@ -1,5 +1,5 @@
 import { CategoryModel } from "../../data";
-import { CreateCategoryDto, CustomError } from "../../domain";
+import { CreateCategoryDto, CustomError, PaginationDto } from "../../domain";
 import { UserEntity } from "../../domain/entities/user.entity";
 
 
@@ -19,7 +19,6 @@ export class CategoryService{
                 user: user.id
             })
            
-            
             await category.save();
 
             return {
@@ -32,26 +31,39 @@ export class CategoryService{
             throw CustomError.internalServer('Internal sserver')
         }
     }
+ 
+    async getCategories(paginationDto: PaginationDto){
 
-    async getCategories(){
+        const {page, limit} = paginationDto;
+        try {
 
-        // try {
-        //     const categories = await CategoryModel.find();
-        //     console.log(categories);
+            // const categories = await CategoryModel.find()
+            //     .skip((page -1) * limit)
+            //     .limit(limit)
+
+            const [total, categories] = await Promise.all([
+                CategoryModel.countDocuments(),
+                CategoryModel.find()
+                    .skip((page -1) * limit)
+                    .limit(limit)
+            ]);
+
+            return {
+                page: page,
+                limit: limit,
+                total: total,
+
+                categories: categories.map( category => ({
+                    id: category.id,
+                    name: category.name,
+                    available: category.avaliable,
+                }))
+        };
             
-        //     return categories.map( category => {(
-        //         id: category.id,
-        //         name: category.name,
-        //         available: category.avaliable,
-        //     )})
             
-        // } catch (error) {
-            
-        // }
-        console.log('aa');
-        
-        
-        
+       } catch (error) {
+           throw CustomError.internalServer('Otro error?')
+         }   
     }
 }
         

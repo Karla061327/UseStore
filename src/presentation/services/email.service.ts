@@ -53,7 +53,7 @@ export class EmailService {
         attachments: attachements,
       });
 
-      // console.log( sentInformation );
+      console.log( sentInformation );
 
       return true;
     } catch ( error ) {

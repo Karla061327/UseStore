@@ -13,11 +13,13 @@ export class CategoryService{
         if (categoryExists) throw CustomError.badRequest('Category already exists');
 
         try {
-            console.log(user);
+            console.log(user.id);
+            
             const category = new CategoryModel({
                 ...createCategoryDto,
                 user: user.id
             })
+            
            
             await category.save();
 
@@ -28,6 +30,7 @@ export class CategoryService{
             }
              
         } catch (error) {
+            
             throw CustomError.internalServer('Internal sserver')
         }
     }

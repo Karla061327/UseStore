@@ -17,15 +17,15 @@ export class AuthService {
         if (existUser) throw CustomError.badRequest('Email already exist');
 
         try{
-            const user = new UserModel(registerUserDto);
+             const user = new UserModel(registerUserDto);
 
-            user.password = bcryptAdapter.hash(registerUserDto.password);
+             user.password = bcryptAdapter.hash(registerUserDto.password);
 
-            await user.save();
+             await user.save();
 
             await this.sendEmailValidationLink(user.email)
 
-            const {password, ...userEntity} = UserEntity.fromObject(user);
+             const {password, ...userEntity} = UserEntity.fromObject(user);
 
             const token = await JwtAdapter.generateToken({id: user.id});
             if (!token) throw CustomError.internalServer('Error while creating JWT')
